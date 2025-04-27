@@ -5,7 +5,8 @@ import JourneyPage from './pages/JourneyPage';
 import ComparePage from './pages/ComparePage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
-import ReviewsPage  from './pages/ReviewsPage';
+import ReviewsPage from './pages/ReviewsPage';
+import RegisterPage from './pages/RegisterPage'; 
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <LoginPage />,
+      },
+      {
+        path: 'register', 
+        element: <RegisterPage />,
       },
       {
         path: 'admin',

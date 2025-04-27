@@ -1,33 +1,60 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
-    // Dummy login validation
-    if (email === 'admin@gmail.com' && password === 'admin') {
-      navigate('/admin');
-    } else {
-        navigate('/');
+    try {
+      await axios.post('http://localhost:5259/api/user/register', {
+        fullName,
+        email,
+        password,
+      });
+
+      alert('Registration successful! Please login.');
+      navigate('/login'); // 👈 After register, go back to Login page
+    } catch (err) {
+      console.error('Registration failed:', err);
+      setError('Registration failed. Please try again.');
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Register</h2>
+
         {error && (
           <div className="mb-4 p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded">
             {error}
           </div>
         )}
-        <form onSubmit={handleLogin} className="space-y-4">
+
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div>
+            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+              Full Name
+            </label>
+            <input
+              id="fullName"
+              type="text"
+              required
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Enter your full name"
+            />
+          </div>
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -39,9 +66,10 @@ const LoginPage: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="admin@example.com"
+              placeholder="example@gmail.com"
             />
           </div>
+
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -56,16 +84,26 @@ const LoginPage: React.FC = () => {
               placeholder="••••••••"
             />
           </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
+            className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition duration-200"
           >
-            Login
+            Register
           </button>
         </form>
+
+        <div className="text-center mt-4">
+          <button
+            onClick={() => navigate('/login')}
+            className="text-blue-600 hover:underline text-sm"
+          >
+            Already have an account? Login
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
